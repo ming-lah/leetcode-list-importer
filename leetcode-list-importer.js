@@ -66,9 +66,10 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function buildHeaders(csrfToken) {
+function buildHeaders(csrfToken, referer) {
     const h = { 'Content-Type': 'application/json' };
     if (csrfToken) h['X-CSRFToken'] = csrfToken;
+    if (referer) h['Referer'] = referer;
     return h;
 }
 
@@ -98,7 +99,7 @@ async function fetchAllProblems(csrfToken) {
     try {
         const res = await fetch(ENDPOINT, {
             method: 'POST',
-            headers: buildHeaders(csrfToken),
+            headers: buildHeaders(csrfToken, `https://${HOST}/problemset/`),
             body: JSON.stringify({
                 query,
                 variables: { categorySlug: '', skip: 0, limit: CONFIG.pageSize, filters: {} }
@@ -124,7 +125,7 @@ async function fetchAllProblems(csrfToken) {
         try {
             const res = await fetch(ENDPOINT, {
                 method: 'POST',
-                headers: buildHeaders(csrfToken),
+                headers: buildHeaders(csrfToken, `https://${HOST}/problemset/`),
                 body: JSON.stringify({
                     query,
                     variables: { categorySlug: '', skip, limit: CONFIG.pageSize, filters: {} }
@@ -162,7 +163,7 @@ async function batchAddToFavorite(favoriteSlug, questionSlugs, csrfToken) {
     try {
         const res = await fetch(ENDPOINT, {
             method: 'POST',
-            headers: buildHeaders(csrfToken),
+            headers: buildHeaders(csrfToken, `https://${HOST}/problem-list/${favoriteSlug}/`),
             body: JSON.stringify({
                 query,
                 variables: { favoriteSlug, questionSlugs }

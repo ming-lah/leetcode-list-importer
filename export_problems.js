@@ -61,7 +61,10 @@
     try {
       const res = await fetch(GRAPHQL_URL, {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: {
+          "content-type": "application/json",
+          "Referer": `https://${HOST}/problems/${slug}/`,
+        },
         body: JSON.stringify({ query: QUERY, variables: { titleSlug: slug } }),
       });
       const json = await res.json();
